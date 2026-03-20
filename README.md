@@ -1,7 +1,7 @@
-================================================================
+
   E-COMMERCE SALES & PROFIT ANALYSIS PROJECT
   August 2024
-================================================================
+
 
 FOLDER STRUCTURE
 ────────────────
@@ -88,10 +88,5 @@ COHORT ANALYSIS
 - Result: Enterprise cohorts show higher CLV and better retention
 
 
-FORECASTING MODEL (Linear Regression)
-───────────────────────────────────────
-Method: Ordinary Least Squares linear trend on monthly revenue
-Inputs: monthly_summary.csv (month_index + actual_revenue)
-Output: Forecast for 3 future months with trend slope
-Note:   No ML used — pure statistical linear regression
+
 ================================================================
