@@ -1,0 +1,178 @@
+================================================================
+ E-COMMERCE SALES & PROFIT — POWER BI DASHBOARD SETUP GUIDE
+================================================================
+File: powerbi_setup.txt
+Project: E-Commerce Sales & Profit Dashboard (August 2024)
+================================================================
+
+
+────────────────────────────────────────────────────────────────
+ STEP 1 — IMPORT DATA FILES INTO POWER BI DESKTOP
+────────────────────────────────────────────────────────────────
+1. Open Power BI Desktop → Get Data → Text/CSV
+2. Import these files from the /data/ folder:
+   - ecommerce_cleaned.csv      (main fact table)
+   - monthly_summary.csv        (pre-aggregated time series)
+   - customer_ltv.csv           (customer dimension)
+   - product_summary.csv        (product dimension)
+   - region_summary.csv         (region dimension)
+   - category_summary.csv       (category dimension)
+
+3. From /cohort_analysis/:
+   - cohort_summary.csv
+   - retention_matrix.csv
+
+
+────────────────────────────────────────────────────────────────
+ STEP 2 — DATA MODEL (RELATIONSHIPS)
+────────────────────────────────────────────────────────────────
+In Model View, create relationships:
+
+  ecommerce_cleaned[customer_id]  →  customer_ltv[customer_id]
+  ecommerce_cleaned[product]      →  product_summary[product]
+  ecommerce_cleaned[region]       →  region_summary[region]
+  ecommerce_cleaned[category]     →  category_summary[category]
+  ecommerce_cleaned[month]        →  monthly_summary[month]
+
+All relationships: Many-to-One, Single direction filter
+
+
+────────────────────────────────────────────────────────────────
+ STEP 3 — DAX MEASURES
+────────────────────────────────────────────────────────────────
+Create these measures in the ecommerce_cleaned table:
+
+-- KPI Measures
+Total Revenue =
+    SUM(ecommerce_cleaned[revenue])
+
+Total Profit =
+    SUM(ecommerce_cleaned[profit])
+
+Total Cost =
+    SUM(ecommerce_cleaned[cost])
+
+Total Units Sold =
+    SUM(ecommerce_cleaned[units])
+
+Avg Margin % =
+    AVERAGE(ecommerce_cleaned[margin_pct])
+
+Total Orders =
+    COUNTROWS(ecommerce_cleaned)
+
+Unique Customers =
+    DISTINCTCOUNT(ecommerce_cleaned[customer_id])
+
+Avg Order Value =
+    DIVIDE([Total Revenue], [Total Orders], 0)
+
+Revenue per Unit =
+    DIVIDE([Total Revenue], [Total Units Sold], 0)
+
+
+-- Period Comparison Measures
+Revenue MoM % =
+    VAR CurrentMonth = [Total Revenue]
+    VAR PrevMonth =
+        CALCULATE(
+            [Total Revenue],
+            DATEADD(ecommerce_cleaned[date], -1, MONTH)
+        )
+    RETURN
+        DIVIDE(CurrentMonth - PrevMonth, PrevMonth, 0)
+
+Revenue YTD =
+    TOTALYTD([Total Revenue], ecommerce_cleaned[date])
+
+Profit Margin % =
+    DIVIDE([Total Profit], [Total Revenue], 0)
+
+
+-- Conditional / Ranking Measures
+Top Region Revenue =
+    CALCULATE(
+        [Total Revenue],
+        TOPN(1, VALUES(ecommerce_cleaned[region]), [Total Revenue])
+    )
+
+High Margin Products =
+    CALCULATE(
+        COUNTROWS(ecommerce_cleaned),
+        ecommerce_cleaned[margin_flag] = "Good"
+    )
+
+
+────────────────────────────────────────────────────────────────
+ STEP 4 — DASHBOARD PAGES & VISUALS
+────────────────────────────────────────────────────────────────
+
+PAGE 1 — Executive Overview
+  • KPI Cards:  Total Revenue | Total Profit | Avg Margin% | Total Orders
+  • Line Chart: Monthly Revenue & Profit Trend (x=month, y=revenue+profit)
+  • Donut Chart: Revenue by Category
+  • Bar Chart:  Revenue by Region
+  • Slicer:     Region | Category | Segment (dropdown)
+
+PAGE 2 — Product Performance
+  • Bar Chart (horizontal): Top Products by Revenue
+  • Scatter Plot:           Revenue vs Margin % (bubble = units sold)
+  • Table:                  Product | Revenue | Profit | Margin% | Units
+  • KPI Card:               Top Product Name + Revenue
+
+PAGE 3 — Regional Analysis
+  • Map Visual:   Revenue by Region (filled map or bubble map)
+  • Stacked Bar:  Region × Category revenue breakdown
+  • Matrix Table: Region rows × Category columns → Revenue values
+  • Slicer:       Quarter
+
+PAGE 4 — Customer & Segment Analysis
+  • Donut Chart:  Revenue share by Segment (Enterprise/SMB/Retail)
+  • Bar Chart:    Top 10 Customers by LTV
+  • KPI Cards:    Unique Customers | Avg Order Value | Avg LTV
+  • Table:        Customer ID | Segment | Orders | LTV | Avg Order
+
+PAGE 5 — Cohort & Retention
+  • Matrix Visual:  Cohort month × M0/M1/M2/M3 retention %
+                    (conditional formatting: green=100%, red<50%)
+  • Bar Chart:      Customer Acquisition per Cohort Month
+  • Line Chart:     CLV by Cohort Month
+  • KPI Card:       Avg CLV across all cohorts
+
+PAGE 6 — Forecasting
+  • Line Chart:  Actual Revenue (solid) + Forecast Revenue (dashed)
+                 (use Analytics pane → Forecast in Power BI)
+  • Forecast Settings:
+      Forecast length:    3 months
+      Confidence interval: 95%
+      Seasonality:        Auto-detect
+  • Table:       Month | Actual | Forecast | Delta
+  • KPI Card:    Next Month Forecast Revenue
+
+
+────────────────────────────────────────────────────────────────
+ STEP 5 — FORMATTING & THEME
+────────────────────────────────────────────────────────────────
+Recommended theme: "Executive" or custom JSON theme
+  Primary color:   #1565C0  (blue)
+  Accent color:    #00897B  (teal)
+  Warning color:   #F57F17  (amber)
+  Danger color:    #C62828  (red)
+  Background:      #F5F5F5
+  Card background: #FFFFFF
+
+KPI Cards:
+  - Bold large number (24pt)
+  - Subtitle label (10pt gray)
+  - Conditional icon: ▲ green if positive, ▼ red if negative
+
+All charts: disable gridlines, enable data labels on bar charts
+
+
+────────────────────────────────────────────────────────────────
+ FILE SAVED AS
+────────────────────────────────────────────────────────────────
+  ecommerce_dashboard.pbix
+  (Power BI Desktop — requires Power BI Desktop v2.120+)
+
+================================================================

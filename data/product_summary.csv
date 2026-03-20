@@ -1,0 +1,13 @@
+product,revenue,profit,units,orders,margin_pct
+Laptop,3650,1250,7,3,34.25
+Phone,2830,1290,12,3,45.58
+Sofa,1460,840,3,2,57.53
+Monitor,1300,580,7,2,44.62
+Table,1040,640,4,2,61.54
+Tablet,940,520,11,2,55.32
+Jacket,785,512,15,3,65.22
+Chair,600,370,7,2,61.67
+Sneakers,390,260,17,2,66.67
+Headphones,340,190,7,1,55.88
+Lamp,260,165,22,2,63.46
+T-Shirt,90,65,15,1,72.22
