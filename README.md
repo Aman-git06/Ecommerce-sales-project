@@ -1,11 +1,15 @@
 🧹 Data Cleaning
 
-The raw dataset was processed using Python (Pandas) by removing null values and filtering out invalid entries such as zero or negative revenue, cost, and units. New features like profit, margin percentage, revenue per unit, and time-based attributes (month, quarter, year) were created to enrich the dataset. A margin classification flag was also added to categorize performance, and no duplicate records were found after validation.
+The raw dataset was cleaned using Python (Pandas) by removing missing values and filtering out incorrect entries like zero or negative revenue, cost, and units. New useful columns such as profit, profit percentage, revenue per unit, and time-related fields (month, quarter, year) were created. Products were also categorized based on profit performance to make analysis easier. No duplicate records were found after cleaning.
 
 🧠 SQL Analysis
 
-A set of 12 SQL queries was developed to extract key business insights from the cleaned dataset. These queries covered overall KPIs, regional and category-wise performance, top products, monthly trends using window functions, customer segmentation, lifetime value analysis, and cohort identification. Additional queries enabled cross-tab analysis and prepared base data for forecasting models.
+SQL was used to explore and analyze the cleaned data through multiple queries. These queries helped in understanding sales performance across regions and categories, identifying top-performing products, tracking monthly trends, and analyzing different customer segments. Additional queries were written to compare data across categories and prepare data for future trend analysis.
 
 📊 Power BI Dashboard
 
-An interactive 6-page Power BI dashboard was built to visualize insights effectively. It includes an executive overview with KPI cards and trends, product and regional performance analysis, customer segmentation and LTV insights, cohort retention visualization, and a forecasting page with projected revenue trends. The dashboard focuses on clarity, interactivity, and decision-making support.
+An interactive dashboard was created in Power BI to present the insights visually. It includes an overview of sales and profit, detailed product and regional analysis, customer behavior insights, retention patterns, and future sales trends. The dashboard is designed to be simple, interactive, and helpful for making business decisions.
+
+🔁 Cohort Analysis
+
+Customers were grouped based on the month they made their first purchase, and their activity was tracked in the following months to see how many returned to buy again. This helps in understanding customer retention over time. The analysis showed that enterprise customers tend to return more often and stay longer compared to small medium bussiness and retail customers, making them more valuable for the business.
